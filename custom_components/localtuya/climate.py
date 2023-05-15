@@ -11,23 +11,23 @@ from homeassistant.components.climate import (
     ClimateEntity,
 )
 from homeassistant.components.climate.const import (
+    CURRENT_HVAC_HEAT,
+    CURRENT_HVAC_IDLE,
     HVAC_MODE_AUTO,
     HVAC_MODE_HEAT,
     HVAC_MODE_OFF,
     HVAC_MODE_COOL,
     HVAC_MODE_DRY,
     HVAC_MODE_FAN_ONLY,
+    PRESET_AWAY,
+    PRESET_ECO,
+    PRESET_HOME,
+    PRESET_NONE,
     SUPPORT_PRESET_MODE,
     SUPPORT_TARGET_TEMPERATURE,
     SUPPORT_TARGET_TEMPERATURE_RANGE,
     SUPPORT_FAN_MODE,
     SUPPORT_SWING_MODE,
-    CURRENT_HVAC_IDLE,
-    CURRENT_HVAC_HEAT,
-    PRESET_NONE,
-    PRESET_ECO,
-    PRESET_AWAY,
-    PRESET_HOME,
     FAN_AUTO,
     FAN_LOW,
     FAN_MEDIUM,
@@ -51,25 +51,25 @@ from .const import (
     CONF_CURRENT_TEMPERATURE_DP,
     CONF_TEMP_MAX,
     CONF_TEMP_MIN,
+    CONF_ECO_DP,
+    CONF_ECO_VALUE,
+    CONF_HEURISTIC_ACTION,
+    CONF_HVAC_ACTION_DP,
+    CONF_HVAC_ACTION_SET,
+    CONF_HVAC_MODE_DP,
+    CONF_HVAC_MODE_SET,
     CONF_MAX_TEMP_DP,
     CONF_MIN_TEMP_DP,
     CONF_PRECISION,
+    CONF_PRESET_DP,
+    CONF_PRESET_SET,
     CONF_TARGET_PRECISION,
     CONF_TARGET_TEMPERATURE_DP,
     CONF_TEMPERATURE_STEP,
-    CONF_HVAC_MODE_DP,
     CONF_HVAC_FAN_MODE_DP,
     CONF_HVAC_FAN_MODE_SET,
     CONF_HVAC_SWING_MODE_DP,
     CONF_HVAC_SWING_MODE_SET,
-    CONF_HVAC_MODE_SET,
-    CONF_HEURISTIC_ACTION,
-    CONF_HVAC_ACTION_DP,
-    CONF_HVAC_ACTION_SET,
-    CONF_ECO_DP,
-    CONF_ECO_VALUE,
-    CONF_PRESET_DP,
-    CONF_PRESET_SET,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -87,6 +87,10 @@ HVAC_MODE_SETS = {
         HVAC_MODE_HEAT: "Manual",
         HVAC_MODE_AUTO: "Program",
     },
+    "m/p": {
+        HVAC_MODE_HEAT: "m",
+        HVAC_MODE_AUTO: "p",
+    },
     "True/False": {
         HVAC_MODE_HEAT: True,
     },
@@ -96,6 +100,10 @@ HVAC_MODE_SETS = {
         HVAC_MODE_DRY: "wet",
         HVAC_MODE_COOL: "cold",
         HVAC_MODE_AUTO: "auto",
+    },
+    "1/0": {
+        HVAC_MODE_HEAT: "1",
+        HVAC_MODE_AUTO: "0",
     },
 }
 HVAC_ACTION_SETS = {
@@ -230,7 +238,7 @@ class LocaltuyaClimate(LocalTuyaEntity, ClimateEntity):
         self._has_presets = self.has_config(CONF_ECO_DP) or self.has_config(
             CONF_PRESET_DP
         )
-        print("Initialized climate [{}]".format(self.name))
+        _LOGGER.debug("Initialized climate [%s]", self.name)
 
     @property
     def supported_features(self):
