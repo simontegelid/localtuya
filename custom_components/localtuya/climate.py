@@ -492,7 +492,7 @@ class LocaltuyaClimate(LocalTuyaEntity, ClimateEntity):
                     self._swing_mode = mode
                     break
             else:
-                _LOGGER.debug("Unknown fan mode %s" % self.dps_conf(CONF_HVAC_SWING_MODE_DP))
+                _LOGGER.debug("Unknown swing mode %s" % self.dps_conf(CONF_HVAC_SWING_MODE_DP))
                 self._swing_mode = SWING_OFF
 
         # Update the current action
