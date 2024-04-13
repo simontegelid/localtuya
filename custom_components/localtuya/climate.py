@@ -23,9 +23,7 @@ from homeassistant.components.climate.const import (
     PRESET_ECO,
     PRESET_HOME,
     PRESET_NONE,
-    SUPPORT_PRESET_MODE,
-    SUPPORT_TARGET_TEMPERATURE,
-    SUPPORT_TARGET_TEMPERATURE_RANGE,
+    ClimateEntityFeature,
     SUPPORT_FAN_MODE,
     SUPPORT_SWING_MODE,
     FAN_AUTO,
@@ -42,8 +40,7 @@ from homeassistant.const import (
     PRECISION_HALVES,
     PRECISION_TENTHS,
     PRECISION_WHOLE,
-    TEMP_CELSIUS,
-    TEMP_FAHRENHEIT,
+    UnitOfTemperature,
 )
 
 from .common import LocalTuyaEntity, async_setup_entry
@@ -245,11 +242,11 @@ class LocaltuyaClimate(LocalTuyaEntity, ClimateEntity):
         """Flag supported features."""
         supported_features = 0
         if self.has_config(CONF_TARGET_TEMPERATURE_DP):
-            supported_features = supported_features | SUPPORT_TARGET_TEMPERATURE
+            supported_features = supported_features | ClimateEntityFeature.TARGET_TEMPERATURE
         if self.has_config(CONF_MAX_TEMP_DP):
-            supported_features = supported_features | SUPPORT_TARGET_TEMPERATURE_RANGE
+            supported_features = supported_features | ClimateEntityFeature.TARGET_TEMPERATURE_RANGE
         if self.has_config(CONF_PRESET_DP) or self.has_config(CONF_ECO_DP):
-            supported_features = supported_features | SUPPORT_PRESET_MODE
+            supported_features = supported_features | ClimateEntityFeature.PRESET_MODE
         if self.has_config(CONF_HVAC_FAN_MODE_DP) and self.has_config(CONF_HVAC_FAN_MODE_SET):
             supported_features = supported_features | SUPPORT_FAN_MODE
         if self.has_config(CONF_HVAC_SWING_MODE_DP):
@@ -273,8 +270,8 @@ class LocaltuyaClimate(LocalTuyaEntity, ClimateEntity):
             self._config.get(CONF_TEMPERATURE_UNIT, DEFAULT_TEMPERATURE_UNIT)
             == TEMPERATURE_FAHRENHEIT
         ):
-            return TEMP_FAHRENHEIT
-        return TEMP_CELSIUS
+            return UnitOfTemperature.FAHRENHEIT
+        return UnitOfTemperature.CELSIUS
 
     @property
     def hvac_mode(self):
